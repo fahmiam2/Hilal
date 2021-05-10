@@ -8,10 +8,10 @@ Estimating the appearance of hilal
 - __Age__: Moon age since a new moon appears.
 
 # Library
-In this project, I use the pyephem library.
+In this project, I use the ephem library.
 ## Installation
 
-$ pip install pyephem
+$ pip install ephem
 
 For more information about this library, please check it out:
 https://rhodesmill.org/pyephem/toc.html
