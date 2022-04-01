@@ -5,6 +5,7 @@ import pandas as pd
 import numpy as np 
 from datetime import datetime
 from datetime import timedelta
+from zoneinfo import ZoneInfo
 # from geopy.exc import GeocoderTimedOut
 # from geopy.geocoders import Nominatim
 
@@ -14,26 +15,28 @@ def observer(lokasi, latitude, longitude, date):
     obs.lon = longitude
     obs.date = date #waktu pengamatan hilal: YYYY/MM/DD HH:MM:SS (waktu maghrib di lokasi dalam utc) 
     #obs.date = ephem.localtime(obs.date) #convert utc ke waktu lokal
-    st.text("Pengamatan hilal dilakukan pada {} WIB".format(ephem.localtime(obs.date)))
-    
+    zone = ZoneInfo('asia/Jakarta')
+    # st.text("Pengamatan hilal dilakukan pada {} WIB".format(ephem.localtime(obs.date)))
+    st.text("Pengamatan hilal dilakukan pada {} WIB".format(ephem.to_timezone(obs.date, zone)))
+
     # Sun-Moon Elongation and its Altitude
     Moon = ephem.Moon()
     Moon.compute(obs)
     st.text("\nKetinggian bulan pada {} WIB sebesar {} derajat \n"
-        "dan elongasi bulan sebesar {} derajat".format(ephem.localtime(obs.date), Moon.alt, Moon.elong))
+        "dan elongasi bulan sebesar {} derajat".format(ephem.to_timezone(obs.date, zone), Moon.alt, Moon.elong))
     
     # New Moon
     b = date.split(' ', 1)
     b = b[0]
     d = ephem.next_new_moon(b)
-    #d = ephem.to_timezone(d, ephem.UTC)
-    d = ephem.localtime(d)
+    d = ephem.to_timezone(d, zone)
+    #d = ephem.localtime(d)
     st.text("\nWaktu ijtimak terjadi pada: {} WIB".format(d))
     
     # Age of the Moon when does hilal observation
     d_obs = ephem.Date(obs.date)
-    #d_obs = ephem.to_timezone(d_obs, ephem.UTC)
-    d_obs = ephem.localtime(d_obs)
+    d_obs = ephem.to_timezone(d_obs, zone)
+    #d_obs = ephem.localtime(d_obs)
     age = d_obs - d 
     st.text("Bulan pada saat pengamatan berumur {}".format(age))
         
